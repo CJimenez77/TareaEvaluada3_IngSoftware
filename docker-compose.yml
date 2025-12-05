@@ -1,0 +1,56 @@
+version: '3.8'
+
+services:
+  mysqldb:
+    image: mysql:8.0
+    container_name: muebleria_db
+    restart: always
+    ports:
+      - "3307:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: muebleria_tarea3
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - muebleria-network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    build: ./backend
+    container_name: muebleria_backend
+    restart: on-failure
+    ports:
+      - "8080:8080"
+    depends_on:
+      mysqldb:
+        condition: service_healthy
+    environment:
+      MYSQL_URL: jdbc:mysql://mysqldb:3306/muebleria_tarea3?createDatabaseIfNotExist=true&serverTimezone=UTC
+      MYSQL_USER_APP: root
+      MYSQL_PASS_APP: root
+    networks:
+      - muebleria-network
+
+  frontend:
+    build: ./frontend
+    container_name: muebleria_frontend
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+    stdin_open: true
+    tty: true
+    networks:
+      - muebleria-network
+
+networks:
+  muebleria-network:
+    driver: bridge
+
+volumes:
+  mysql_data:
