@@ -3,7 +3,7 @@ version: '3.8'
 services:
   mysqldb:
     image: mysql:8.0
-    container_name: muebleria_db
+    container_name: muebleria_db_tarea3
     restart: always
     ports:
       - "3307:3306"
