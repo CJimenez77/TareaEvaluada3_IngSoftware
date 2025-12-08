@@ -3,7 +3,7 @@ version: '3.8'
 services:
   mysqldb:
     image: mysql:8.0
-    container_name: muebleria_db_tarea3
+    container_name: muebleria_db_tarea3_cjimenez
     restart: always
     ports:
       - "3307:3306"
@@ -22,7 +22,7 @@ services:
 
   backend:
     build: ./backend
-    container_name: muebleria_backend
+    container_name: muebleria_backend_cjimenez
     restart: on-failure
     ports:
       - "8080:8080"
@@ -38,7 +38,7 @@ services:
 
   frontend:
     build: ./frontend
-    container_name: muebleria_frontend
+    container_name: muebleria_frontend_cjimenez
     ports:
       - "3000:3000"
     depends_on:
